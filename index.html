@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Реєстрація на спортивні змагання</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 20px;
+      background: #f5f7fb;
+      color: #172033;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+    }
+    input, select {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      padding: 9px;
+      margin-top: 5px;
+    }
+    input[type="checkbox"] {
+      display: inline;
+      width: auto;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 6px;
+      background: #174ea6;
+      color: white;
+      cursor: pointer;
+    }
+    #result {
+      font-weight: bold;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Реєстрація на спортивні змагання</h1>
+  <p>Садковий Єгор, група 491. КР1, варіант 11.</p>
+  <p>Навчальний приклад. Дані нікуди не надсилаються.</p>
+
+  <form id="registrationForm">
+    <label for="fullName">Ім'я та прізвище</label>
+    <input id="fullName" type="text" maxlength="80" required>
+
+    <label for="age">Вік у повних роках</label>
+    <input id="age" type="number" min="1" max="120" step="1" required>
+
+    <label for="competition">Змагання</label>
+    <select id="competition">
+      <option value="run5">Біг 5 км - 200 грн, від 16 років</option>
+      <option value="run10">Біг 10 км - 350 грн, від 18 років</option>
+      <option value="swim">Плавання 100 м - 250 грн, місць немає</option>
+    </select>
+
+    <button type="submit">Сформувати заявку</button>
+  </form>
+
+  <p id="result" role="status" aria-live="polite"></p>
+
+  <script>
+    const competitions = {
+      run5: { title: "Біг 5 км", fee: 200, minAge: 16, places: 12 },
+      run10: { title: "Біг 10 км", fee: 350, minAge: 18, places: 6 },
+      swim: { title: "Плавання 100 м", fee: 250, minAge: 16, places: 0 }
+    };
+
+    const form = document.getElementById("registrationForm");
+    const result = document.getElementById("result");
+
+    function show(message, isError = false) {
+      result.textContent = message;
+      result.style.color = isError ? "#b42318" : "#166534";
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("fullName").value.trim();
+      const age = Number(document.getElementById("age").value);
+      const competition =
+        competitions[document.getElementById("competition").value];
+
+      if (!name || !Number.isInteger(age) || age < 1 || age > 120) {
+        show("Перевірте ім'я та вік.", true);
+        return;
+      }
+
+      if (age < competition.minAge) {
+        show(
+          "Мінімальний вік для цього змагання: " +
+          competition.minAge + " років.",
+          true
+        );
+        return;
+      }
+
+      if (competition.places === 0) {
+        show("Реєстрація недоступна: вільних місць немає.", true);
+        return;
+      }
+
+      const total = competition.fee;
+
+      show(
+        "Заявку учасника " + name +
+        " на «" + competition.title +
+        "» сформовано. До сплати: " + total +
+        " грн. Це навчальна демонстрація."
+      );
+    });
+  </script>
+</body>
+</html>
