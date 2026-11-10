@@ -69,7 +69,10 @@
 
     <button type="submit">Сформувати заявку</button>
   </form>
-
+    <label>
+      <input id="shirt" type="checkbox">
+      Додати футболку учасника (+150 грн)
+    </label>
   <p id="result" role="status" aria-live="polite"></p>
 
   <script>
@@ -114,7 +117,9 @@
         return;
       }
 
-      const total = competition.fee;
+            const shirtPrice =
+        document.getElementById("shirt").checked ? 150 : 0;
+      const total = competition.fee + shirtPrice;
 
       show(
         "Заявку учасника " + name +
